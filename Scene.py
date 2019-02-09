@@ -1,6 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, cairo, Pango
+from gi.repository import Gtk, Gdk, cairo, Pango, GdkPixbuf
 
 
 
@@ -19,8 +19,8 @@ class Slide:
 		self.scrolledwindow.set_size_request(self.width, self.height)
 		self.textview.set_size_request(self.width, self.height) #16:9 aspect ratio. Can be changed as needed
 		self.textbuffer = self.textview.get_buffer()
-		self.pixbuflist = [] #image list
-
+		self.images = [] #image list
+		self.imagemarks = []
 
 		#Sets our default text and font
 		self.currentfont = "sans"
@@ -31,8 +31,8 @@ class Slide:
 		self.textview.set_top_margin(25)
 		self.textview.set_bottom_margin(25)
 		#Handle right/left margins as non-editible textboxes
-		self.rmsize = 25
-		self.lmsize = 25
+		self.rmsize = 25 #size of the left margin
+		self.lmsize = 25 #size of the right margin
 		self.rightmargin = Gtk.TextView()
 		self.rightmargin.set_editable(False)
 		self.rightmargin.set_size_request(25, self.height)
@@ -99,7 +99,7 @@ class Slide:
 		newfont = font+" "+str(size)
 		self.currentfont = font
 		self.currentfontsize = size
-		self.textview.modify_font(Pango.FontDescription(self.currentfont))
+		self.textview.modify_font(Pango.FontDescription(newfont))
 
 
 
@@ -115,9 +115,9 @@ class Slide:
 
 	def set_dimensions(self, newwidth, newheight):
 		#set the width and height of the slide
-		self.width = newwidth
+		self.width = newwidth-(self.lmsize+self.rmsize)
 		self.height = newheight
-		self.textview.set_size_request(width, height)
+		self.textview.set_size_request(self.width, self.height)
 
 
 
@@ -129,8 +129,22 @@ class Slide:
 		mark = self.textbuffer.get_insert();
 		iterator = self.textbuffer.get_iter_at_mark(mark)
 		self.textbuffer.insert_pixbuf(iterator ,image)
+		self.images.append(image)
+		self.imagemarks.append(mark)
 		#untested
 
+
+
+	def scale_images(self, newwidth, newheight):
+		#scale all images to the new dimensions
+		index = 0
+		for image in self.images:
+			print("here")
+			image = image.scale_simple(newwidth, newheight, 2)
+			mark = self.imagemarks[0]
+			iterator = self.textbuffer.get_iter_at_mark(mark)
+			self.textbuffer.backspace(iterator, True, True)
+			self.textbuffer.insert_pixbuf(iterator ,image)
 
 
 	def tag_button_clicked(self, tag):
@@ -147,6 +161,7 @@ class Slide:
 		one=1
 		#stubbed
 
+
 	def fullscreen(self):
 		#Resize slide and all its elements to fit the fullscreen
 		one=1
@@ -157,7 +172,38 @@ class Slide:
 class SlideDeck:
 	def __init__(self):
 		self.deck = []
+		firstslide = Slide()
+		self.deck.append(firstslide)
+		self.currentslide = firstslide
 
+
+
+	def get_current_slide(self):
+		#Returns the current slide
+		return self.currentslide
+
+
+	def make_new_slide(self):
+		#Make a new slide then return it
+		newslide = Slide()
+		newslide.set_font("sans", "25") #used to test that making a new slide works
+		self.deck.append(newslide)
+		return newslide
+
+
+	def retrieve_slide(self, slide_number):
+		#retrieve the slide in the position specified
+		#Note: The slides will start page count with 1, but the list iterator starts with 0.
+		#To rectify this, we will subtract 1 from the input number
+		goal = slide_number-1
+		index = 0
+		#Iterate through the deck and return the right slide
+		if goal < len(self.deck):
+			for slide in self.deck:
+				if index == goal:
+					return slide
+				index = index+1
+		return currentslide
 
 
 
@@ -168,10 +214,19 @@ def slideTest():
 	win.set_default_size(1000,1000)
 	win.connect("destroy", Gtk.main_quit)
 	
-	slide = Slide()
+	slidedeck = SlideDeck()
+	slide = slidedeck.get_current_slide()
+	win.add(slide.get_slide())
+	win.remove(slide.get_slide())
+	slidedeck.make_new_slide()
+	slide = slidedeck.retrieve_slide(2)
 	win.add(slide.get_slide())
 	#slide.resize_slide(1820,1080, "sans 42") #Successful
-	#slide.font_size("sans", 40) #Successful
+	#slide.set_font("sans", 20) #Successful
+	pic = GdkPixbuf.Pixbuf.new_from_file("apple-touch-icon-144x144-precomposed.png") #use GdkPixbuf to load images.
+	slide.insert_image(pic)
+	slide.scale_images(50,50) #works
+	
 	win.show_all()
 	
 	Gtk.main()
