@@ -52,6 +52,10 @@ class Slide:
         self.scrolledwindow.add(self.textview) 
         #self.box.show()
 
+        self.tag_bold = self.textbuffer.create_tag("bold", weight=Pango.Weight.BOLD)
+        self.tag_italic = self.textbuffer.create_tag("italic", style=Pango.Style.ITALIC)
+        self.tag_underline = self.textbuffer.create_tag("underline", underline=Pango.Underline.SINGLE)
+
 
 
     def resize_slide(self, width, height, pangoFont):
@@ -133,7 +137,7 @@ class Slide:
         
 
     def insert_image_clicked(self,button):
-        dialog = Gtk.FileChooserDialog ("Open Image", button.get_toplevel(), Gtk.FIleChooserAction.OPEN)
+        dialog = Gtk.FileChooserDialog ("Open Image", button.get_toplevel(), Gtk.FileChooserAction.OPEN)
         dialog.add_button(Gtk.STOCK_CANCEL, 0)
         dialog.add_button(Gtk.STOCK_OK, 1)
         dialog.set_default_response(1)
@@ -174,25 +178,37 @@ class Slide:
             self.textbuffer.insert_pixbuf(iterator ,image)
 
 
-    def tag_button_clicked(self, button, tag):
+    def tag_button_clicked(self, button, tag_label):
         #This function allows us to do something when a button is pressed
         #The button's tag will tell us what to do, these will be coded into the buttons
-        bounds = self.textbuffer.get_selection_bounds #selected text
+        if(tag_label == "bold"):
+            tag = self.tag_bold
+        elif(tag_label == "italic"):
+            tag = self.tag_italic
+        elif(tag_label == "underline"):
+            tag = self.tag_underline
+        bounds = self.textbuffer.get_selection_bounds() #selected text
         if len(bounds) != 0:
             start, end = bounds
             self.textbuffer.apply_tag(tag, start, end)
 
 
-    def thumbnail(self):
-        #Resize slide and everything on it to the thumbnail size
-        self.set_dimensions(100, 100)
-        #stubbed
+    def clear_tags(self, button):
+        bounds = self.textbuffer.get_selection_bounds() #selected text
+        if len(bounds) != 0:
+            start, end = bounds
+            self.textbuffer.remove_all_tags(start, end)
+
+
+    def align(self, alignment):
+        self.textview.set_justification(alignment)
 
 
     def fullscreen(self):
         #Resize slide and all its elements to fit the fullscreen
         one=1
         #stubbed
+
 
 
 
@@ -295,4 +311,4 @@ def slideTest():
 
 
 
-slideTest()
+# slideTest()

@@ -1,10 +1,12 @@
 #the place for window stuff
 
 import gi
-import testing as tst
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
+
+import slide
 
 class Window(Gtk.Window):
 
@@ -26,7 +28,7 @@ class Window(Gtk.Window):
         # get the screen size of the computer
         screen = Gdk.Screen.get_default()
         # set size of window according to the size of the screen
-        self.set_size_request(screen.get_width() - 400, screen.get_height() - 200)
+        self.set_size_request(1000, 1000)
 
         # a map from names to Gtk.Action objects for the toolbar.
         toolbar_group = Gtk.ActionGroup("toolbar_actions")
@@ -44,8 +46,15 @@ class Window(Gtk.Window):
         toolbar.unset_style()
         box.pack_start(toolbar, False, False, 0)
 
-
         self.add(box)
+
+
+
+        # SLIDE
+        self.slide_deck = slide.SlideDeck()
+        self.current_slide = self.slide_deck.get_current_slide()
+        box.add(self.slide_deck.get_view())
+
 
         # connect and show window
         self.connect('destroy', Gtk.main_quit)
@@ -85,7 +94,7 @@ class Window(Gtk.Window):
         # keyboard shortcut
         # button_loadfile.add_accelerator('clicked', action_group, ord('N'), Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE)
         # event listener
-        button_loadfile.connect('clicked', tst.on_menu)
+        button_loadfile.connect('clicked', self.on_menu)
 
         toolbar.insert(button_loadfile, 0)
 
@@ -160,7 +169,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_insertpic.set_tooltip_text('Insert picture')
         # event listener
-        button_insertpic.connect('clicked', self.on_menu)
+        button_insertpic.connect('clicked', self.image_clicked)
 
         toolbar.insert(button_insertpic, 6)
 
@@ -297,7 +306,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_bold.set_tooltip_text('Bold')
         # event listener
-        button_bold.connect('clicked', self.on_menu)
+        button_bold.connect('clicked', self.bold_clicked)
 
         toolbar.insert(button_bold, 14)
 
@@ -311,7 +320,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_italic.set_tooltip_text('Italic')
         # event listener
-        button_italic.connect('clicked', self.on_menu)
+        button_italic.connect('clicked', self.italic_clicked)
 
         toolbar.insert(button_italic, 15)
 
@@ -325,7 +334,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_underline.set_tooltip_text('Underline')
         # event listener
-        button_underline.connect('clicked', self.on_menu)
+        button_underline.connect('clicked', self.underline_clicked)
 
         toolbar.insert(button_underline, 16)
 
@@ -372,7 +381,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_alignleft.set_tooltip_text('Align left')
         # event listener
-        button_alignleft.connect('clicked', self.on_menu)
+        button_alignleft.connect('clicked', self.left_align)
 
         toolbar.insert(button_alignleft, 21)
 
@@ -386,7 +395,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_aligncenter.set_tooltip_text('Align Center')
         # event listener
-        button_aligncenter.connect('clicked', self.on_menu)
+        button_aligncenter.connect('clicked', self.center_align)
 
         toolbar.insert(button_aligncenter, 22)
 
@@ -401,7 +410,7 @@ class Window(Gtk.Window):
         # set tooltip text
         button_alignright.set_tooltip_text('Align right')
         # event listener
-        button_alignright.connect('clicked', self.on_menu)
+        button_alignright.connect('clicked', self.right_align)
 
         toolbar.insert(button_alignright, 23)
 
@@ -499,6 +508,30 @@ class Window(Gtk.Window):
 
     def on_menu(self, button):
         print("Toolbar button clicked.")
+
+    def image_clicked(self, button):
+        self.current_slide.insert_image_clicked(button)
+
+    def bold_clicked(self, button):
+        self.current_slide.tag_button_clicked(button, "bold")
+
+    def italic_clicked(self, button):
+        self.current_slide.tag_button_clicked(button, "italic")
+
+    def underline_clicked(self, button):
+        self.current_slide.tag_button_clicked(button, "underline")
+
+    def clear_clicked(self, button):
+        self.current_slide.clear_tags(button)
+
+    def right_align(self, button):
+        self.current_slide.align(Gtk.Justification.RIGHT)
+
+    def left_align(self, button):
+        self.current_slide.align(Gtk.Justification.LEFT)
+
+    def center_align(self, button):
+        self.current_slide.align(Gtk.Justification.CENTER)    
 
 
 window = Window()
