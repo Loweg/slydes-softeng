@@ -1,6 +1,7 @@
 #the place for window stuff
 
 import gi
+import testing as tst
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -30,6 +31,9 @@ class Window(Gtk.Window):
         # a map from names to Gtk.Action objects for the toolbar.
         toolbar_group = Gtk.ActionGroup("toolbar_actions")
 
+        # accel_group = Gtk.AccelGroup()
+        # self.add_accel_group(action_group)
+
         toolbar = self.create_toolbar(toolbar_group)
 
         ui_manager = self.create_ui_manager()
@@ -57,8 +61,8 @@ class Window(Gtk.Window):
         # add the accelerator group to the toplevel window
         # accelerators: shortcuts for activating a menu item
         # will look into later for use
-        accel_group = ui_manager.get_accel_group()
-        self.add_accel_group(accel_group)
+        # accel_group = ui_manager.get_accel_group()
+        # self.add_accel_group(accel_group)
         return ui_manager
 
 
@@ -78,8 +82,10 @@ class Window(Gtk.Window):
         button_loadfile.set_icon_widget(img_loadfile)
         # set tooltip text
         button_loadfile.set_tooltip_text('Load saved slydes presentation')
+        # keyboard shortcut
+        # button_loadfile.add_accelerator('clicked', action_group, ord('N'), Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE)
         # event listener
-        button_loadfile.connect('clicked', self.on_menu)
+        button_loadfile.connect('clicked', tst.on_menu)
 
         toolbar.insert(button_loadfile, 0)
 
@@ -100,16 +106,16 @@ class Window(Gtk.Window):
         #----------------#
         # 'Print' Button #
         #----------------#
-        button_print = Gtk.ToolButton()
-        # set button icon
-        img_print = Gtk.Image().new_from_file("images/icons/print.png")
-        button_print.set_icon_widget(img_print)
-        # set tooltip text
-        button_print.set_tooltip_text('Print slydes')
-        # event listener
-        button_print.connect('clicked', self.on_menu)
+        # button_print = Gtk.ToolButton()
+        # # set button icon
+        # img_print = Gtk.Image().new_from_file("images/icons/print.png")
+        # button_print.set_icon_widget(img_print)
+        # # set tooltip text
+        # button_print.set_tooltip_text('Print slydes')
+        # # event listener
+        # button_print.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_print, 2)
+        # toolbar.insert(button_print, 2)
 
         #---------------#
         # 'Play' Button #
@@ -123,12 +129,12 @@ class Window(Gtk.Window):
         # event listener
         button_play.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_play, 3)
+        toolbar.insert(button_play, 2)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 4)
+        toolbar.insert(Gtk.SeparatorToolItem(), 3)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 5)
+        toolbar.insert(Gtk.SeparatorToolItem(), 4)
 
         #-------------------#
         # 'Text Box' Button #
@@ -142,7 +148,7 @@ class Window(Gtk.Window):
         # event listener
         button_textbox.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_textbox, 6)
+        toolbar.insert(button_textbox, 5)
 
         #-------------------------#
         # 'Insert Picture' Button #
@@ -156,49 +162,49 @@ class Window(Gtk.Window):
         # event listener
         button_insertpic.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_insertpic, 7)
+        toolbar.insert(button_insertpic, 6)
 
         #---------------#
         # 'Draw' Button #
         #---------------#
-        button_draw = Gtk.ToolButton()
-        # set button icon
-        img_draw = Gtk.Image().new_from_file("images/icons/draw.png")
-        button_draw.set_icon_widget(img_draw)
-        # set tooltip text
-        button_draw.set_tooltip_text('Draw')
-        # event listener
-        button_draw.connect('clicked', self.on_menu)
+        # button_draw = Gtk.ToolButton()
+        # # set button icon
+        # img_draw = Gtk.Image().new_from_file("images/icons/draw.png")
+        # button_draw.set_icon_widget(img_draw)
+        # # set tooltip text
+        # button_draw.set_tooltip_text('Draw')
+        # # event listener
+        # button_draw.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_draw, 8)
+        # toolbar.insert(button_draw, 8)
 
         #---------------------#
         # 'Code Block' Button #
         #---------------------#
-        button_code = Gtk.ToolButton()
-        # set button icon
-        img_code = Gtk.Image().new_from_file("images/icons/code-block.png")
-        button_code.set_icon_widget(img_code)
-        # set tooltip text
-        button_code.set_tooltip_text('Insert code block')
-        # event listener
-        button_code.connect('clicked', self.on_menu)
+        # button_code = Gtk.ToolButton()
+        # # set button icon
+        # img_code = Gtk.Image().new_from_file("images/icons/code-block.png")
+        # button_code.set_icon_widget(img_code)
+        # # set tooltip text
+        # button_code.set_tooltip_text('Insert code block')
+        # # event listener
+        # button_code.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_code, 9)
+        # toolbar.insert(button_code, 9)
 
         #----------------#
         # 'Latex' Button #
         #----------------#
-        button_latex = Gtk.ToolButton()
-        # set button icon
-        img_latex = Gtk.Image().new_from_file("images/icons/latex.png")
-        button_latex.set_icon_widget(img_latex)
-        # set tooltip text
-        button_latex.set_tooltip_text('Insert Latex')
-        # event listener
-        button_latex.connect('clicked', self.on_menu)
+        # button_latex = Gtk.ToolButton()
+        # # set button icon
+        # img_latex = Gtk.Image().new_from_file("images/icons/latex.png")
+        # button_latex.set_icon_widget(img_latex)
+        # # set tooltip text
+        # button_latex.set_tooltip_text('Insert Latex')
+        # # event listener
+        # button_latex.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_latex, 10)
+        # toolbar.insert(button_latex, 10)
 
         #--------------------#
         # 'Hyperlink' Button #
@@ -212,26 +218,26 @@ class Window(Gtk.Window):
         # event listener
         button_hyperlink.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_hyperlink, 11)
+        toolbar.insert(button_hyperlink, 7)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 12)
+        toolbar.insert(Gtk.SeparatorToolItem(), 8)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 13)
+        toolbar.insert(Gtk.SeparatorToolItem(), 9)
 
         #--------------------#
         # 'Undo' Button      #
         #--------------------#
-        button_undo = Gtk.ToolButton()
-        # set button icon
-        img_undo = Gtk.Image().new_from_file("images/icons/undo.png")
-        button_undo.set_icon_widget(img_undo)
-        # set tooltip text
-        button_undo.set_tooltip_text('Undo')
-        # event listener
-        button_undo.connect('clicked', self.on_menu)
+        # button_undo = Gtk.ToolButton()
+        # # set button icon
+        # img_undo = Gtk.Image().new_from_file("images/icons/undo.png")
+        # button_undo.set_icon_widget(img_undo)
+        # # set tooltip text
+        # button_undo.set_tooltip_text('Undo')
+        # # event listener
+        # button_undo.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_undo, 14)
+        # toolbar.insert(button_undo, 14)
 
         #-----------------------#
         # 'View Changes' Button #
@@ -245,24 +251,27 @@ class Window(Gtk.Window):
         # event listener
         button_viewchange.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_viewchange, 15)
+        toolbar.insert(button_viewchange, 10)
 
         #---------------#
         # 'Redo' Button #
         #---------------#
-        button_redo = Gtk.ToolButton()
-        # set button icon
-        img_redo = Gtk.Image().new_from_file("images/icons/redo.png")
-        button_redo.set_icon_widget(img_redo)
-        # set tooltip text
-        button_redo.set_tooltip_text('Redo')
-        # event listener
-        button_redo.connect('clicked', self.on_menu)
+        # button_redo = Gtk.ToolButton()
+        # # set button icon
+        # img_redo = Gtk.Image().new_from_file("images/icons/redo.png")
+        # button_redo.set_icon_widget(img_redo)
+        # # set tooltip text
+        # button_redo.set_tooltip_text('Redo')
+        # # event listener
+        # button_redo.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_redo, 16)
+        # toolbar.insert(button_redo, 16)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 17)
+        toolbar.insert(Gtk.SeparatorToolItem(), 11)
+        # separator
+        toolbar.insert(Gtk.SeparatorToolItem(), 12)
+
 
         #----------------------#
         # 'Change Font' Button #
@@ -276,7 +285,7 @@ class Window(Gtk.Window):
         # event listener
         button_changefont.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_changefont, 18)
+        toolbar.insert(button_changefont, 13)
 
         #---------------#
         # 'Bold' Button #
@@ -290,7 +299,7 @@ class Window(Gtk.Window):
         # event listener
         button_bold.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_bold, 19)
+        toolbar.insert(button_bold, 14)
 
         #-----------------#
         # 'Italic' Button #
@@ -304,7 +313,7 @@ class Window(Gtk.Window):
         # event listener
         button_italic.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_italic, 20)
+        toolbar.insert(button_italic, 15)
 
         #--------------------#
         # 'Underline' Button #
@@ -318,7 +327,7 @@ class Window(Gtk.Window):
         # event listener
         button_underline.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_underline, 21)
+        toolbar.insert(button_underline, 16)
 
         #-----------------------------#
         # 'Increase Font Size' Button #
@@ -332,7 +341,7 @@ class Window(Gtk.Window):
         # event listener
         button_increase_fontsize.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_increase_fontsize, 22)
+        toolbar.insert(button_increase_fontsize, 17)
 
         #-----------------------------#
         # 'Decrease Font Size' Button #
@@ -346,12 +355,12 @@ class Window(Gtk.Window):
         # event listener
         button_decrease_fontsize.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_decrease_fontsize, 23)
+        toolbar.insert(button_decrease_fontsize, 18)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 24)
+        toolbar.insert(Gtk.SeparatorToolItem(), 19)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 25)
+        toolbar.insert(Gtk.SeparatorToolItem(), 20)
 
         #---------------------#
         # 'Align Left' Button #
@@ -365,7 +374,7 @@ class Window(Gtk.Window):
         # event listener
         button_alignleft.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_alignleft, 26)
+        toolbar.insert(button_alignleft, 21)
 
         #-----------------------#
         # 'Align Center' Button #
@@ -379,7 +388,7 @@ class Window(Gtk.Window):
         # event listener
         button_aligncenter.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_aligncenter, 27)
+        toolbar.insert(button_aligncenter, 22)
 
 
         #----------------------#
@@ -394,40 +403,40 @@ class Window(Gtk.Window):
         # event listener
         button_alignright.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_alignright, 28)
+        toolbar.insert(button_alignright, 23)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 29)
+        toolbar.insert(Gtk.SeparatorToolItem(), 24)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 30)
+        toolbar.insert(Gtk.SeparatorToolItem(), 25)
 
         #------------------------#
         # 'Bulleted List' Button #
         #------------------------#
-        button_bulletlist = Gtk.ToolButton()
-        # set button icon
-        img_bulletlist = Gtk.Image().new_from_file("images/icons/bullet-list.png")
-        button_bulletlist.set_icon_widget(img_bulletlist)
-        # set tooltip text
-        button_bulletlist.set_tooltip_text('Bulleted list')
-        # event listener
-        button_bulletlist.connect('clicked', self.on_menu)
+        # button_bulletlist = Gtk.ToolButton()
+        # # set button icon
+        # img_bulletlist = Gtk.Image().new_from_file("images/icons/bullet-list.png")
+        # button_bulletlist.set_icon_widget(img_bulletlist)
+        # # set tooltip text
+        # button_bulletlist.set_tooltip_text('Bulleted list')
+        # # event listener
+        # button_bulletlist.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_bulletlist, 31)
+        # toolbar.insert(button_bulletlist, 31)
 
         #------------------------#
         # 'Numbered List' Button #
         #------------------------#
-        button_numlist = Gtk.ToolButton()
-        # set button icon
-        img_numlist = Gtk.Image().new_from_file("images/icons/number-list.png")
-        button_numlist.set_icon_widget(img_numlist)
-        # set tooltip text
-        button_numlist.set_tooltip_text('Numbered list')
-        # event listener
-        button_numlist.connect('clicked', self.on_menu)
+        # button_numlist = Gtk.ToolButton()
+        # # set button icon
+        # img_numlist = Gtk.Image().new_from_file("images/icons/number-list.png")
+        # button_numlist.set_icon_widget(img_numlist)
+        # # set tooltip text
+        # button_numlist.set_tooltip_text('Numbered list')
+        # # event listener
+        # button_numlist.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_numlist, 32)
+        # toolbar.insert(button_numlist, 32)
 
         #-----------------------#
         # 'Page Numbers' Button #
@@ -441,12 +450,12 @@ class Window(Gtk.Window):
         # event listener
         button_pagenum.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_pagenum, 33)
+        toolbar.insert(button_pagenum, 26)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 34)
+        toolbar.insert(Gtk.SeparatorToolItem(), 27)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 35)
+        toolbar.insert(Gtk.SeparatorToolItem(), 28)
 
         #-----------------#
         # 'Themes' Button #
@@ -460,12 +469,12 @@ class Window(Gtk.Window):
         # event listener
         button_themes.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_themes, 36)
+        toolbar.insert(button_themes, 29)
 
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 37)
+        toolbar.insert(Gtk.SeparatorToolItem(), 30)
         # separator
-        toolbar.insert(Gtk.SeparatorToolItem(), 38)
+        toolbar.insert(Gtk.SeparatorToolItem(), 31)
 
         #---------------#
         # 'Help' Button #
@@ -479,7 +488,7 @@ class Window(Gtk.Window):
         # event listener
         button_help.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_help, 39)
+        toolbar.insert(button_help, 32)
 
         return toolbar
 
