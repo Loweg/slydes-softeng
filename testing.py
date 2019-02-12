@@ -4,4 +4,4 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 def on_menu(self, button):
-        print("Toolbar button clicked.")
+    print("Toolbar button clicked.")
