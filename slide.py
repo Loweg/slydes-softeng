@@ -55,8 +55,6 @@ class Slide:
         self.tag_italic = self.textbuffer.create_tag("italic", style=Pango.Style.ITALIC)
         self.tag_underline = self.textbuffer.create_tag("underline", underline=Pango.Underline.SINGLE)
 
-
-
     def resize_slide(self, width, height, pangoFont):
         #Resizes the slide and the textbox as a result.
         self.textview.set_size_request(width-(self.lmsize+self.rmsize), height)
@@ -90,11 +88,13 @@ class Slide:
     def set_font(self, font, size, warn):
         #take string font and integer size to resize the fonts
         if(int(size) < 11 and warn == True):
-            dialoge_window = Gtk.MessageDialog(self.window,
-                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                Gtk.MessageType.QUESTION,
-                                Gtk.ButtonsType.OK,
-                                "Warning! This font may be too small to read!")
+            dialoge_window = Gtk.MessageDialog(
+                self.window,
+                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                Gtk.MessageType.QUESTION,
+                Gtk.ButtonsType.OK,
+                "Warning! This font may be too small to read!"
+            )
             dialoge_box = dialoge_window.get_content_area()
             dialoge_window.run()
             dialoge_window.destroy()

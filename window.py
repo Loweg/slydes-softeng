@@ -9,12 +9,11 @@ from gi.repository import Gdk
 import slide
 
 class Window(Gtk.Window):
-
     def __init__(self):
         '''
-            call super class constructor.
-            once the backend is a little more developed, the title of the slide will have
-            to be changed and such.
+        call super class constructor.
+        once the backend is a little more developed, the title of the slide will have
+        to be changed and such.
         '''
 
         #---------------#
@@ -65,19 +64,17 @@ class Window(Gtk.Window):
         self.connect('destroy', Gtk.main_quit)
         self.show_all()
 
-
     def set_current_slide(self, new_slide):
-
         '''
-            takes in THIS window and a slide object
-            sets the passed slide as the current slide to display
+        takes in THIS window and a slide object
+        sets the passed slide as the current slide to display
         '''
         self.current_slide = new_slide
 
     def create_ui_manager(self):
         '''
-            Takes in THIS window
-            Returns a UI manager
+        Takes in THIS window
+        Returns a UI manager
         '''
         ui_manager = Gtk.UIManager()
 
@@ -96,8 +93,8 @@ class Window(Gtk.Window):
 
     def create_toolbar(self, action_group):
         '''
-            takes in THIS window and an action group
-            creates all of the buttons for the toolbar that will be displayed at the top of the window.
+        takes in THIS window and an action group
+        creates all of the buttons for the toolbar that will be displayed at the top of the window.
         '''
 
         toolbar = Gtk.Toolbar()
@@ -550,17 +547,15 @@ class Window(Gtk.Window):
 
         return toolbar
 
-
-
     def main(self):
         '''
-            starts main loop for GTK.
+        starts main loop for GTK.
         '''
         Gtk.main()
 
     def on_menu(self, button):
         '''
-            stub method while we wait to implement more button functions.
+        stub method while we wait to implement more button functions.
         '''
         print("Toolbar button clicked.")
 
