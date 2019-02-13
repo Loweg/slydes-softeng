@@ -27,7 +27,7 @@ class Window(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         # resize window
-        screen = Gdk.Screen.get_default()
+        #screen = Gdk.Screen.get_default()
         self.set_size_request(1000, 800)
 
         #----------------#
