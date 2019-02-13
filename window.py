@@ -30,7 +30,6 @@ class Window(Gtk.Window):
         screen = Gdk.Screen.get_default()
         self.set_size_request(1000, 800)
 
-
         #----------------#
         # toolbar set up #
         #----------------#
@@ -68,6 +67,7 @@ class Window(Gtk.Window):
 
 
     def set_current_slide(self, new_slide):
+
         '''
             takes in THIS window and a slide object
             sets the passed slide as the current slide to display
@@ -88,12 +88,10 @@ class Window(Gtk.Window):
         # self.add_accel_group(accel_group)
         return ui_manager
 
-
     def add_accelerator(self, widget, accel, signal="activate"):
         if accel is not None:
             key, mod = Gtk.accelerator_parse(accel)
             widget.add_accelerator(signal, Gtk.AccelGroup(), key, mod, Gtk.AccelFlags.VISIBLE)
-
 
 
     def create_toolbar(self, action_group):
@@ -113,8 +111,6 @@ class Window(Gtk.Window):
         button_loadfile.set_icon_widget(img_loadfile)
         # set tooltip text
         button_loadfile.set_tooltip_text('Load saved slydes presentation')
-        # keyboard shortcut
-        self.add_accelerator(button_loadfile, "<Control>l", signal="clicked")
         # event listener
         button_loadfile.connect('clicked', self.on_menu)
 
@@ -452,7 +448,6 @@ class Window(Gtk.Window):
         radio_aligncenter.connect('toggled', self.center_align)
 
         toolbar.insert(radio_aligncenter, 26)
-
 
         #----------------------#
         # 'Align Right' Button #
