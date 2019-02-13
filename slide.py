@@ -6,8 +6,9 @@ from gi.repository import Gtk, Gdk, cairo, Pango, GdkPixbuf
 
 class Slide:
 
-    def __init__(self):
+    def __init__(self, window):
         #Initializes the basic slide. Handled as a GTK text view
+        self.window = window
         self.box = Gtk.Grid()
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.set_hexpand(False)
@@ -99,8 +100,15 @@ class Slide:
     def set_font(self, font, size, warn):
         #take string font and integer size to resize the fonts
         if(int(size) < 11 and warn == True):
-            print("Warning! This font may be too small to read!")
-            #stubbed, do something to show warning to end user
+            dialog_window = Gtk.MessageDialog(self.window,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                Gtk.MessageType.QUESTION,
+                                Gtk.ButtonsType.OK,
+                                "Warning! This font may be too small to read!")
+            dialog_box = dialog_window.get_content_area()
+            dialog_window.run()
+            dialog_window.destroy()
+            #print("Warning! This font may be too small to read!")\
         newfont = font+" "+str(size)
         self.currentfont = font
         self.currentfontsize = size
@@ -108,11 +116,12 @@ class Slide:
 
 
 
-    def set_font_at(self, font, size):
-        #Change only the font in the currently selected area
-        two==2
-        #stubbed
+    def increment_font(self):
+        self.set_font(self.currentfont, int(self.currentfontsize)+1, True)
 
+    def decrement_font(self):
+        if(int(self.currentfontsize)-1 > 0):
+            self.set_font(self.currentfont, int(self.currentfontsize)-1, True)
 
 
     def get_height(self):
@@ -137,17 +146,41 @@ class Slide:
         
 
     def insert_image_clicked(self,button):
+        dialog_window = Gtk.MessageDialog(self.window,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                Gtk.MessageType.QUESTION,
+                                Gtk.ButtonsType.OK,
+                                "Choose the width and height of the image.")
+        dialog_box = dialog_window.get_content_area()
+        spin_button_w = Gtk.SpinButton()
+        adjustment = Gtk.Adjustment(1, 1, 100, 1, 10, 1)
+        spin_button_w.set_adjustment(adjustment)
+        spin_button_w.set_numeric(True)
+        spin_button_w.set_update_policy(Gtk.SpinButtonUpdatePolicy.IF_VALID)
+        dialog_box.pack_end(spin_button_w, False, False, 0)
+        spin_button_h = Gtk.SpinButton()
+        spin_button_h.set_adjustment(adjustment)
+        spin_button_h.set_numeric(True)
+        spin_button_h.set_update_policy(Gtk.SpinButtonUpdatePolicy.IF_VALID)
+        dialog_box.pack_end(spin_button_h, False, False, 0)
+
+        dialog_window.show_all()
+        dialog_window.run()
+        dialog_window.destroy()
         dialog = Gtk.FileChooserDialog ("Open Image", button.get_toplevel(), Gtk.FileChooserAction.OPEN)
         dialog.add_button(Gtk.STOCK_CANCEL, 0)
         dialog.add_button(Gtk.STOCK_OK, 1)
         dialog.set_default_response(1)
+
+        tempwidth = spin_button_w.get_value_as_int()
+        tempheight = spin_button_h.get_value_as_int()
 
         filefilter = Gtk.FileFilter()
         filefilter.add_pixbuf_formats()
         dialog.set_filter(filefilter)
 
         if dialog.run() == 1:
-            pic = GdkPixbuf.Pixbuf.new_from_file(dialog.get_filename())
+            pic = GdkPixbuf.Pixbuf.new_from_file_at_scale(dialog.get_filename(), tempwidth, tempheight, True)
             self.insert_image(pic)
 
         dialog.destroy()
@@ -209,16 +242,38 @@ class Slide:
         one=1
         #stubbed
 
+    def insert_link(self, window):
+        dialog_window = Gtk.MessageDialog(window,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                Gtk.MessageType.QUESTION,
+                                Gtk.ButtonsType.OK_CANCEL,
+                                "Insert a Link")
+        dialog_box = dialog_window.get_content_area()
+        url_entry = Gtk.Entry()
+        url_entry.set_text("Enter a URL here")
+        url_entry.set_size_request(250,0)
+        dialog_box.pack_end(url_entry, False, False, 0)
+        dialog_window.show_all()
+        response = dialog_window.run()
+        url = url_entry.get_text()
 
+        dialog_window.destroy()
+        if response == Gtk.ResponseType.OK:
+            link = Gtk.LinkButton(url, label=url)
+            anchor = self.textbuffer.create_child_anchor(self.textbuffer.get_iter_at_mark(self.textbuffer.get_insert()))
+            self.textview.add_child_at_anchor(link, anchor)
+            window.show_all()
+
+        
 
 
 
 
 class SlideDeck:
-    def __init__(self):
+    def __init__(self, win):
         self.deck = []
         self.buttons = []
-        firstslide = Slide()
+        firstslide = Slide(win)
         self.deck.append(firstslide)
         self.currentslide = firstslide
         self.grid = Gtk.Grid()
@@ -232,7 +287,7 @@ class SlideDeck:
         firstbutton.connect("clicked", self.on_button_clicked)
         self.list.add(firstbutton)
         self.buttons.append(firstbutton)
-
+        self.win = win
 
 
     def get_current_slide(self):
@@ -249,12 +304,13 @@ class SlideDeck:
         self.currentslide = self.retrieve_slide(slide_number)
         self.grid.add(self.currentslide.get_slide())
         self.currentslide.get_slide().show()
+        self.win.set_current_slide(self.currentslide)
         self.grid.show_all()
 
 
     def make_new_slide(self):
         #Make a new slide then return it
-        newslide = Slide()
+        newslide = Slide(self.win)
         #newslide.set_font("sans", "25") #used to test that making a new slide works
         self.deck.append(newslide)
         newindex = len(self.deck)
@@ -281,6 +337,8 @@ class SlideDeck:
 
     def get_view(self):
         return self.grid
+
+
 
 
 
