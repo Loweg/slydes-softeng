@@ -9,7 +9,6 @@ from gi.repository import Gdk
 import slide
 
 class Window(Gtk.Window):
-
     def __init__(self):
         '''
         call super class constructor.
@@ -27,9 +26,8 @@ class Window(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         # resize window
-        screen = Gdk.Screen.get_default()
+        #screen = Gdk.Screen.get_default()
         self.set_size_request(1000, 800)
-
 
         #----------------#
         # toolbar set up #
@@ -65,7 +63,6 @@ class Window(Gtk.Window):
         self.connect('destroy', Gtk.main_quit)
         self.show_all()
 
-
     def set_current_slide(self, new_slide):
         '''
         takes in THIS window and a slide object
@@ -86,7 +83,6 @@ class Window(Gtk.Window):
         # accel_group = ui_manager.get_accel_group()
         # self.add_accel_group(accel_group)
         return ui_manager
-
 
     def create_toolbar(self, action_group):
         '''
@@ -443,7 +439,6 @@ class Window(Gtk.Window):
 
         toolbar.insert(self.radio_aligncenter, 25)
 
-
         #----------------------#
         # 'Align Right' Button #
         #----------------------#
@@ -544,8 +539,6 @@ class Window(Gtk.Window):
         toolbar.insert(self.button_help, 35)
 
         return toolbar
-
-
 
     def main(self):
         '''

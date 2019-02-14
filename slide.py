@@ -3,9 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo, Pango, GdkPixbuf
 
 
-
 class Slide:
-
     def __init__(self, window):
         #Initializes the basic slide. Handled as a GTK text view
         self.window = window
@@ -57,8 +55,6 @@ class Slide:
         self.tag_italic = self.textbuffer.create_tag("italic", style=Pango.Style.ITALIC)
         self.tag_underline = self.textbuffer.create_tag("underline", underline=Pango.Underline.SINGLE)
 
-
-
     def resize_slide(self, width, height, pangoFont):
         #Resizes the slide and the textbox as a result.
         self.textview.set_size_request(width-(self.lmsize+self.rmsize), height)
@@ -69,9 +65,7 @@ class Slide:
 
         #Stubbed, needs to find a way to resize images once they are added.
 
-
-
-    def margin_size(margin, marginsize):
+    def margin_size(self, margin, marginsize):
         if margin == "left":
             self.leftmargin.set_size_request(marginsize, self.height)
             self.lmsize = marginsize
@@ -83,38 +77,32 @@ class Slide:
         elif margin == "top":
             self.textview.set_bottom_margin(marginsize)
 
-
-
     def get_slide(self):
         #returns the slide object to be used as needed
         return self.box
-
-
 
     def get_font(self):
         #returns the string describing the current font
         return self.currentfont
 
-
-
     def set_font(self, font, size, warn):
         #take string font and integer size to resize the fonts
         if(int(size) < 11 and warn == True):
-            dialog_window = Gtk.MessageDialog(self.window,
-                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                Gtk.MessageType.QUESTION,
-                                Gtk.ButtonsType.OK,
-                                "Warning! This font may be too small to read!")
-            dialog_box = dialog_window.get_content_area()
-            dialog_window.run()
-            dialog_window.destroy()
+            dialoge_window = Gtk.MessageDialog(
+                self.window,
+                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                Gtk.MessageType.QUESTION,
+                Gtk.ButtonsType.OK,
+                "Warning! This font may be too small to read!"
+            )
+            dialoge_box = dialoge_window.get_content_area()
+            dialoge_window.run()
+            dialoge_window.destroy()
             #print("Warning! This font may be too small to read!")\
-        newfont = font+" "+str(size)
+        newfont = font + " " + str(size)
         self.currentfont = font
         self.currentfontsize = size
         self.textview.modify_font(Pango.FontDescription(newfont))
-
-
 
     def increment_font(self):
         self.set_font(self.currentfont, int(self.currentfontsize)+1, True)
@@ -123,16 +111,11 @@ class Slide:
         if(int(self.currentfontsize)-1 > 0):
             self.set_font(self.currentfont, int(self.currentfontsize)-1, True)
 
-
     def get_height(self):
         return self.height
 
-
-
     def get_width(self):
         return self.width
-
-
 
     def set_dimensions(self, newwidth, newheight):
         #set the width and height of the slide
@@ -144,7 +127,6 @@ class Slide:
         self.scrolledwindow.set_size_request(self.width, self.height)
         self.textview.set_size_request(self.width, self.height)
         
-
     def insert_image_clicked(self,button):
         dialog_window = Gtk.MessageDialog(self.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -185,31 +167,27 @@ class Slide:
 
         dialog.destroy()
 
-
     def insert_image(self, image):
         #Insert an image into the slide
         #Stubbed, still deciding on doability and how to do it.
         #I'm thinking insert an image file as a child widget. We should have a button to handle this in UI
         #The filetype for these will be as a pixbuf, since it can be easily inserted and resized
-        mark = self.textbuffer.get_insert();
+        mark = self.textbuffer.get_insert()
         iterator = self.textbuffer.get_iter_at_mark(mark)
         self.textbuffer.insert_pixbuf(iterator ,image)
         self.images.append(image)
         self.imagemarks.append(mark)
         #untested
 
-
-
     def scale_images(self, newwidth, newheight):
         #scale all images to the new dimensions
-        index = 0
+        #index = 0
         for image in self.images:
             image = image.scale_simple(newwidth, newheight, 2)
             mark = self.imagemarks[0]
             iterator = self.textbuffer.get_iter_at_mark(mark)
             self.textbuffer.backspace(iterator, True, True)
             self.textbuffer.insert_pixbuf(iterator ,image)
-
 
     def tag_button_clicked(self, button, tag_label):
         #This function allows us to do something when a button is pressed
@@ -225,29 +203,29 @@ class Slide:
             start, end = bounds
             self.textbuffer.apply_tag(tag, start, end)
 
-
     def clear_tags(self, button):
         bounds = self.textbuffer.get_selection_bounds() #selected text
         if len(bounds) != 0:
             start, end = bounds
             self.textbuffer.remove_all_tags(start, end)
 
-
     def align(self, alignment):
         self.textview.set_justification(alignment)
 
-
     def fullscreen(self):
         #Resize slide and all its elements to fit the fullscreen
-        one=1
+        #one=1 #what is this
         #stubbed
+        pass
 
     def insert_link(self, window):
-        dialog_window = Gtk.MessageDialog(window,
-                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                Gtk.MessageType.QUESTION,
-                                Gtk.ButtonsType.OK_CANCEL,
-                                "Insert a Link")
+        dialog_window = Gtk.MessageDialog(
+            window,
+            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+            Gtk.MessageType.QUESTION,
+            Gtk.ButtonsType.OK_CANCEL,
+            "Insert a Link"
+        )
         dialog_box = dialog_window.get_content_area()
         url_entry = Gtk.Entry()
         url_entry.set_text("Enter a URL here")
@@ -263,11 +241,6 @@ class Slide:
             anchor = self.textbuffer.create_child_anchor(self.textbuffer.get_iter_at_mark(self.textbuffer.get_insert()))
             self.textview.add_child_at_anchor(link, anchor)
             window.show_all()
-
-        
-
-
-
 
 class SlideDeck:
     def __init__(self, win):
@@ -289,7 +262,6 @@ class SlideDeck:
         self.buttons.append(firstbutton)
         self.win = win
 
-
     def get_current_slide(self):
         #Returns the current slide
         return self.currentslide
@@ -307,7 +279,6 @@ class SlideDeck:
         self.win.set_current_slide(self.currentslide)
         self.grid.show_all()
 
-
     def make_new_slide(self):
         #Make a new slide then return it
         newslide = Slide(self.win)
@@ -319,7 +290,6 @@ class SlideDeck:
         self.list.add(newbutton)
         self.buttons.append(newbutton)
         return newslide
-
 
     def retrieve_slide(self, slide_number):
         #retrieve the slide in the position specified
@@ -333,7 +303,7 @@ class SlideDeck:
                 if index == goal:
                     return slide
                 index = index+1
-        return currentslide
+        return index
 
     def get_view(self):
         return self.grid
@@ -350,7 +320,7 @@ def slideTest():
     win.set_default_size(1000,1000)
     win.connect("destroy", Gtk.main_quit)
     
-    slidedeck = SlideDeck()
+    slidedeck = SlideDeck(win)
     slide = slidedeck.get_current_slide()
     win.add(slidedeck.get_view())
     slidedeck.make_new_slide()
