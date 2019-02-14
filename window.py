@@ -21,7 +21,7 @@ class Window(Gtk.Window):
         # window set up #
         #---------------#
 
-        Gtk.Window.__init__(self, title='Slydes -- Unititled 1')
+        Gtk.Window.__init__(self, title='Slydes -- Untitled 1')
 
         # position window to center of screen when launched
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -44,8 +44,7 @@ class Window(Gtk.Window):
         # shortcuts set up #
         #------------------#
 
-        self.accel_group = Gtk.AccelGroup()
-        self.add_accel_group(self.accel_group)
+        self.connect('key-press-event', self.on_key)
 
 
         # the box that will hold all of the things in our window
@@ -89,13 +88,6 @@ class Window(Gtk.Window):
         return ui_manager
 
 
-    def add_accelerator(self, widget, accel, signal="activate"):
-        if accel is not None:
-            key, mod = Gtk.accelerator_parse(accel)
-            widget.add_accelerator(signal, Gtk.AccelGroup(), key, mod, Gtk.AccelFlags.VISIBLE)
-
-
-
     def create_toolbar(self, action_group):
         '''
         takes in THIS window and an action group
@@ -107,44 +99,44 @@ class Window(Gtk.Window):
         #--------------------#
         # 'Load File' Button #
         #--------------------#
-        button_loadfile = Gtk.ToolButton()
+        self.button_loadfile = Gtk.ToolButton()
         # set button icon
         img_loadfile = Gtk.Image().new_from_file("images/icons/load-file.png")
-        button_loadfile.set_icon_widget(img_loadfile)
+        self.button_loadfile.set_icon_widget(img_loadfile)
         # set tooltip text
-        button_loadfile.set_tooltip_text('Load saved slydes presentation')
+        self.button_loadfile.set_tooltip_text('Ctrl+O: Load saved slydes presentation')
         # event listener
-        button_loadfile.connect('clicked', self.on_menu)
+        self.button_loadfile.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_loadfile, 0)
+        toolbar.insert(self.button_loadfile, 0)
 
         #--------------------#
         # 'Save File' Button #
         #--------------------#
-        button_savefile = Gtk.ToolButton()
+        self.button_savefile = Gtk.ToolButton()
         # set button icon
         img_savefile = Gtk.Image().new_from_file("images/icons/save.png")
-        button_savefile.set_icon_widget(img_savefile)
+        self.button_savefile.set_icon_widget(img_savefile)
         # set tooltip text
-        button_savefile.set_tooltip_text('Save File')
+        self.button_savefile.set_tooltip_text('F12: Save File')
         # event listener
-        button_savefile.connect('clicked', self.on_menu)
+        self.button_savefile.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_savefile, 1)
+        toolbar.insert(self.button_savefile, 1)
 
         #--------------------#
         # 'Add Slide' Button #
         #--------------------#
-        button_addslide = Gtk.ToolButton()
+        self.button_addslide = Gtk.ToolButton()
         # set button icon
         img_addslide = Gtk.Image().new_from_file("images/icons/add-slide.png")
-        button_addslide.set_icon_widget(img_addslide)
+        self.button_addslide.set_icon_widget(img_addslide)
         # set tooltip text
-        button_addslide.set_tooltip_text('Add new slide')
+        self.button_addslide.set_tooltip_text('Ctrl+M: Add new slide')
         # event listener
-        button_addslide.connect('clicked', self.add_slide)
+        self.button_addslide.connect('clicked', self.add_slide)
 
-        toolbar.insert(button_addslide, 2)
+        toolbar.insert(self.button_addslide, 2)
 
         #----------------#
         # 'Print' Button #
@@ -163,16 +155,16 @@ class Window(Gtk.Window):
         #---------------#
         # 'Play' Button #
         #---------------#
-        button_play = Gtk.ToolButton()
+        self.button_play = Gtk.ToolButton()
         # set button icon
         img_play = Gtk.Image().new_from_file("images/icons/play.png")
-        button_play.set_icon_widget(img_play)
+        self.button_play.set_icon_widget(img_play)
         # set tooltip text
-        button_play.set_tooltip_text('Play slydes presentation')
+        self.button_play.set_tooltip_text('F5: Play slydes presentation')
         # event listener
-        button_play.connect('clicked', self.on_menu)
+        self.button_play.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_play, 3)
+        toolbar.insert(self.button_play, 3)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 4)
@@ -196,16 +188,16 @@ class Window(Gtk.Window):
         #-------------------------#
         # 'Insert Picture' Button #
         #-------------------------#
-        button_insertpic = Gtk.ToolButton()
+        self.button_insertpic = Gtk.ToolButton()
         # set button icon
         img_insertpic = Gtk.Image().new_from_file("images/icons/insert-pic.png")
-        button_insertpic.set_icon_widget(img_insertpic)
+        self.button_insertpic.set_icon_widget(img_insertpic)
         # set tooltip text
-        button_insertpic.set_tooltip_text('Insert picture')
+        self.button_insertpic.set_tooltip_text('Ctrl+P: Insert picture')
         # event listener
-        button_insertpic.connect('clicked', self.image_clicked)
+        self.button_insertpic.connect('clicked', self.image_clicked)
 
-        toolbar.insert(button_insertpic, 6)
+        toolbar.insert(self.button_insertpic, 6)
 
         #---------------#
         # 'Draw' Button #
@@ -252,16 +244,16 @@ class Window(Gtk.Window):
         #--------------------#
         # 'Hyperlink' Button #
         #--------------------#
-        button_hyperlink = Gtk.ToolButton()
+        self.button_hyperlink = Gtk.ToolButton()
         # set button icon
         img_hyperlink = Gtk.Image().new_from_file("images/icons/hyperlink.png")
-        button_hyperlink.set_icon_widget(img_hyperlink)
+        self.button_hyperlink.set_icon_widget(img_hyperlink)
         # set tooltip text
-        button_hyperlink.set_tooltip_text('Insert hyperlink')
+        self.button_hyperlink.set_tooltip_text('Ctrl+K: Insert hyperlink')
         # event listener
-        button_hyperlink.connect('clicked', self.insert_link)
+        self.button_hyperlink.connect('clicked', self.insert_link)
 
-        toolbar.insert(button_hyperlink, 7)
+        toolbar.insert(self.button_hyperlink, 7)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 8)
@@ -285,16 +277,16 @@ class Window(Gtk.Window):
         #-----------------------#
         # 'View Changes' Button #
         #-----------------------#
-        button_viewchange = Gtk.ToolButton()
+        self.button_viewchange = Gtk.ToolButton()
         # set button icon
         img_viewchange = Gtk.Image().new_from_file("images/icons/view-change.png")
-        button_viewchange.set_icon_widget(img_viewchange)
+        self.button_viewchange.set_icon_widget(img_viewchange)
         # set tooltip text
-        button_viewchange.set_tooltip_text('View changes made')
+        self.button_viewchange.set_tooltip_text('View changes made')
         # event listener
-        button_viewchange.connect('clicked', self.on_menu)
+        self.button_viewchange.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_viewchange, 10)
+        toolbar.insert(self.button_viewchange, 10)
 
         #---------------#
         # 'Redo' Button #
@@ -318,44 +310,44 @@ class Window(Gtk.Window):
         #----------------------#
         # 'Change Font' Button #
         #----------------------#
-        button_changefont = Gtk.ToolButton()
+        self.button_changefont = Gtk.ToolButton()
         # set button icon
         img_changefont = Gtk.Image().new_from_file("images/icons/font.png")
-        button_changefont.set_icon_widget(img_changefont)
+        self.button_changefont.set_icon_widget(img_changefont)
         # set tooltip text
-        button_changefont.set_tooltip_text('Change font')
+        self.button_changefont.set_tooltip_text('Ctrl+F: Change font')
         # event listener
-        button_changefont.connect('clicked', self.on_menu)
+        self.button_changefont.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_changefont, 13)
+        toolbar.insert(self.button_changefont, 13)
 
         #-----------------------------#
         # 'Increase Font Size' Button #
         #-----------------------------#
-        button_increase_fontsize = Gtk.ToolButton()
+        self.button_increase_fontsize = Gtk.ToolButton()
         # set button icon
         img_increase_fontsize = Gtk.Image().new_from_file("images/icons/increase-font-size.png")
-        button_increase_fontsize.set_icon_widget(img_increase_fontsize)
+        self.button_increase_fontsize.set_icon_widget(img_increase_fontsize)
         # set tooltip text
-        button_increase_fontsize.set_tooltip_text('Increase font size')
+        self.button_increase_fontsize.set_tooltip_text('Ctrl+Shift+>: Increase font size')
         # event listener
-        button_increase_fontsize.connect('clicked', self.increase_font)
+        self.button_increase_fontsize.connect('clicked', self.increase_font)
 
-        toolbar.insert(button_increase_fontsize, 14)
+        toolbar.insert(self.button_increase_fontsize, 14)
 
         #-----------------------------#
         # 'Decrease Font Size' Button #
         #-----------------------------#
-        button_decrease_fontsize = Gtk.ToolButton()
+        self.button_decrease_fontsize = Gtk.ToolButton()
         # set button icon
         img_decrease_fontsize = Gtk.Image().new_from_file("images/icons/decrease-font-size.png")
-        button_decrease_fontsize.set_icon_widget(img_decrease_fontsize)
+        self.button_decrease_fontsize.set_icon_widget(img_decrease_fontsize)
         # set tooltip text
-        button_decrease_fontsize.set_tooltip_text('Decrease font size')
+        self.button_decrease_fontsize.set_tooltip_text('Ctrl+Shift+<: Decrease font size')
         # event listener
-        button_decrease_fontsize.connect('clicked', self.decrease_font)
+        self.button_decrease_fontsize.connect('clicked', self.decrease_font)
 
-        toolbar.insert(button_decrease_fontsize, 15)
+        toolbar.insert(self.button_decrease_fontsize, 15)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 16)
@@ -365,58 +357,58 @@ class Window(Gtk.Window):
         #---------------#
         # 'Bold' Button #
         #---------------#
-        button_bold = Gtk.ToolButton()
+        self.button_bold = Gtk.ToolButton()
         # set button icon
         img_bold = Gtk.Image().new_from_file("images/icons/bold.png")
-        button_bold.set_icon_widget(img_bold)
+        self.button_bold.set_icon_widget(img_bold)
         # set tooltip text
-        button_bold.set_tooltip_text('Bold')
+        self.button_bold.set_tooltip_text('Ctrl+B: Bold')
         # event listener
-        button_bold.connect('clicked', self.bold_clicked)
+        self.button_bold.connect('clicked', self.bold_clicked)
 
-        toolbar.insert(button_bold, 18)
+        toolbar.insert(self.button_bold, 18)
 
         #-----------------#
         # 'Italic' Button #
         #-----------------#
-        button_italic = Gtk.ToolButton()
+        self.button_italic = Gtk.ToolButton()
         # set button icon
         img_italic = Gtk.Image().new_from_file("images/icons/italic.png")
-        button_italic.set_icon_widget(img_italic)
+        self.button_italic.set_icon_widget(img_italic)
         # set tooltip text
-        button_italic.set_tooltip_text('Italic')
+        self.button_italic.set_tooltip_text('Ctrl+I: Italic')
         # event listener
-        button_italic.connect('clicked', self.italic_clicked)
+        self.button_italic.connect('clicked', self.italic_clicked)
 
-        toolbar.insert(button_italic, 19)
+        toolbar.insert(self.button_italic, 19)
 
         #--------------------#
         # 'Underline' Button #
         #--------------------#
-        button_underline = Gtk.ToolButton()
+        self.button_underline = Gtk.ToolButton()
         # set button icon
         img_underline = Gtk.Image().new_from_file("images/icons/underline.png")
-        button_underline.set_icon_widget(img_underline)
+        self.button_underline.set_icon_widget(img_underline)
         # set tooltip text
-        button_underline.set_tooltip_text('Underline')
+        self.button_underline.set_tooltip_text('Ctrl+U: Underline')
         # event listener
-        button_underline.connect('clicked', self.underline_clicked)
+        self.button_underline.connect('clicked', self.underline_clicked)
 
-        toolbar.insert(button_underline, 20)
+        toolbar.insert(self.button_underline, 20)
 
         #------------------------------#
         # 'Reset Type Emphasis' Button #
         #------------------------------#
-        button_reset = Gtk.ToolButton()
+        self.button_reset = Gtk.ToolButton()
         # set button icon
         img_reset = Gtk.Image().new_from_file("images/icons/reset.png")
-        button_reset.set_icon_widget(img_reset)
+        self.button_reset.set_icon_widget(img_reset)
         # set tooltip text
-        button_reset.set_tooltip_text('Reset all text emphasis')
+        self.button_reset.set_tooltip_text('Reset all text emphasis')
         # event listener
-        button_reset.connect('clicked', self.clear_clicked)
+        self.button_reset.connect('clicked', self.clear_clicked)
 
-        toolbar.insert(button_reset, 21)
+        toolbar.insert(self.button_reset, 21)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 22)
@@ -426,45 +418,45 @@ class Window(Gtk.Window):
         #---------------------#
         # 'Align Left' Button #
         #---------------------#
-        radio_alignleft = Gtk.RadioToolButton()
+        self.radio_alignleft = Gtk.RadioToolButton()
         # set button icon
         img_alignleft = Gtk.Image().new_from_file("images/icons/align-left.png")
-        radio_alignleft.set_icon_widget(img_alignleft)
+        self.radio_alignleft.set_icon_widget(img_alignleft)
         # set tooltip text
-        radio_alignleft.set_tooltip_text('Align left')
+        self.radio_alignleft.set_tooltip_text('Ctrl+L: Align left')
         # event listener
-        radio_alignleft.connect('toggled', self.left_align)
+        self.radio_alignleft.connect('toggled', self.left_align)
 
-        toolbar.insert(radio_alignleft, 24)
+        toolbar.insert(self.radio_alignleft, 24)
 
         #-----------------------#
         # 'Align Center' Button #
         #-----------------------#
-        radio_aligncenter = Gtk.RadioToolButton().new_from_widget(radio_alignleft)
+        self.radio_aligncenter = Gtk.RadioToolButton().new_from_widget(self.radio_alignleft)
         # set button icon
         img_aligncenter = Gtk.Image().new_from_file("images/icons/align-center.png")
-        radio_aligncenter.set_icon_widget(img_aligncenter)
+        self.radio_aligncenter.set_icon_widget(img_aligncenter)
         # set tooltip text
-        radio_aligncenter.set_tooltip_text('Align Center')
+        self.radio_aligncenter.set_tooltip_text('Ctrl+E: Align Center')
         # event listener
-        radio_aligncenter.connect('toggled', self.center_align)
+        self.radio_aligncenter.connect('toggled', self.center_align)
 
-        toolbar.insert(radio_aligncenter, 25)
+        toolbar.insert(self.radio_aligncenter, 25)
 
 
         #----------------------#
         # 'Align Right' Button #
         #----------------------#
-        radio_alignright = Gtk.RadioToolButton().new_from_widget(radio_alignleft)
+        self.radio_alignright = Gtk.RadioToolButton().new_from_widget(self.radio_alignleft)
         # set button icon
         img_alignright = Gtk.Image().new_from_file("images/icons/align-right.png")
-        radio_alignright.set_icon_widget(img_alignright)
+        self.radio_alignright.set_icon_widget(img_alignright)
         # set tooltip text
-        radio_alignright.set_tooltip_text('Align right')
+        self.radio_alignright.set_tooltip_text('Ctrl+R: Align right')
         # event listener
-        radio_alignright.connect('toggled', self.right_align)
+        self.radio_alignright.connect('toggled', self.right_align)
 
-        toolbar.insert(radio_alignright, 26)
+        toolbar.insert(self.radio_alignright, 26)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 27)
@@ -502,16 +494,16 @@ class Window(Gtk.Window):
         #-----------------------#
         # 'Page Numbers' Button #
         #-----------------------#
-        button_pagenum = Gtk.ToolButton()
+        self.button_pagenum = Gtk.ToolButton()
         # set button icon
         img_pagenum = Gtk.Image().new_from_file("images/icons/page-num.png")
-        button_pagenum.set_icon_widget(img_pagenum)
+        self.button_pagenum.set_icon_widget(img_pagenum)
         # set tooltip text
-        button_pagenum.set_tooltip_text('Insert page numbers')
+        self.button_pagenum.set_tooltip_text('Ctrl+N: Insert page numbers')
         # event listener
-        button_pagenum.connect('clicked', self.on_menu)
+        self.button_pagenum.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_pagenum, 29)
+        toolbar.insert(self.button_pagenum, 29)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 30)
@@ -521,16 +513,16 @@ class Window(Gtk.Window):
         #-----------------#
         # 'Themes' Button #
         #-----------------#
-        button_themes = Gtk.ToolButton()
+        self.button_themes = Gtk.ToolButton()
         # set button icon
         img_themes = Gtk.Image().new_from_file("images/icons/change-theme.png")
-        button_themes.set_icon_widget(img_themes)
+        self.button_themes.set_icon_widget(img_themes)
         # set tooltip text
-        button_themes.set_tooltip_text('Change slydes theme')
+        self.button_themes.set_tooltip_text('Ctrl+T: Change slydes theme')
         # event listener
-        button_themes.connect('clicked', self.on_menu)
+        self.button_themes.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_themes, 32)
+        toolbar.insert(self.button_themes, 32)
 
         # separator
         toolbar.insert(Gtk.SeparatorToolItem(), 33)
@@ -540,16 +532,16 @@ class Window(Gtk.Window):
         #---------------#
         # 'Help' Button #
         #---------------#
-        button_help = Gtk.ToolButton()
+        self.button_help = Gtk.ToolButton()
         # set button icon
         img_help = Gtk.Image().new_from_file("images/icons/help.png")
-        button_help.set_icon_widget(img_help)
+        self.button_help.set_icon_widget(img_help)
         # set tooltip text
-        button_help.set_tooltip_text('Help')
+        self.button_help.set_tooltip_text('F1: Help')
         # event listener
-        button_help.connect('clicked', self.on_menu)
+        self.button_help.connect('clicked', self.on_menu)
 
-        toolbar.insert(button_help, 35)
+        toolbar.insert(self.button_help, 35)
 
         return toolbar
 
@@ -566,6 +558,71 @@ class Window(Gtk.Window):
         stub method while we wait to implement more button functions.
         '''
         print("Toolbar button clicked.")
+
+    def on_key(self, widget, event):
+        '''
+        check event.keyval
+        '''
+        key = Gdk.keyval_name(event.keyval)
+
+        ctrl = (event.state & Gdk.ModifierType.CONTROL_MASK)
+
+        # align left
+        if ctrl and key == "l":
+            self.radio_alignleft.set_active(True)
+        # align center
+        elif ctrl and key == "e":
+            self.radio_aligncenter.set_active(True)
+        # align right
+        elif ctrl and key == "r":
+            self.radio_alignright.set_active(True)
+        # change font
+        elif ctrl and key == "f":
+            self.on_menu(self.button_changefont)
+        # insert hyperlink
+        elif ctrl and key == "k":
+            self.insert_link(self.button_hyperlink)
+        # add slide
+        elif ctrl and key == "m":
+            self.add_slide(self.button_addslide)
+        # help button
+        elif key == "F1":
+            self.on_menu(self.button_help)
+        # bold
+        elif ctrl and key == "b":
+            self.bold_clicked(self.button_bold)
+        # italic
+        elif ctrl and key == "i":
+            self.italic_clicked(self.button_italic)
+        # underline
+        elif ctrl and key == "u":
+            self.underline_clicked(self.button_underline)
+        # play presentation
+        elif key == "F5":
+            self.on_menu(self.button_play)
+        # save 
+        elif key == "F12":
+            self.on_menu(self.button_savefile)
+        # increase font size
+        elif ctrl and key == "greater":
+            self.increase_font(self.button_increase_fontsize)
+        # decrease font size
+        elif ctrl and key == "less":
+            self.decrease_font(self.button_decrease_fontsize)
+        # page numbers
+        elif ctrl and key == "n":
+            self.on_menu(self.button_pagenum)
+        # change theme
+        elif ctrl and key == "t":
+            self.on_menu(self.button_themes)
+        # load
+        elif ctrl and key == "o":
+            self.on_menu(self.button_loadfile)
+        # insert picture
+        elif ctrl and key == "p":
+            self.image_clicked(self.button_insertpic)
+
+
 
     #--------------------------------#
     # 'Insert Picture' Button METHOD #
