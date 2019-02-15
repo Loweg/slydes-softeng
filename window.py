@@ -1,4 +1,5 @@
 #the place for window stuff
+import os
 
 import gi
 
@@ -539,7 +540,7 @@ class Window(Gtk.Window):
         # set tooltip text
         self.button_help.set_tooltip_text('F1: Help')
         # event listener
-        self.button_help.connect('clicked', self.on_menu)
+        self.button_help.connect('clicked', self.help_clicked)
 
         toolbar.insert(self.button_help, 35)
 
@@ -696,6 +697,9 @@ class Window(Gtk.Window):
     #------------------------------------#
     def decrease_font(self, button):
         self.current_slide.decrement_font()
+
+    def help_clicked(self, button):
+        os.system('xdg-open ./help.html')
 
 window = Window()
 window.main()
