@@ -2,10 +2,14 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo, Pango, GdkPixbuf
 
+class State:
+    def __init__(self):
+        pass
 
 class Slide:
     def __init__(self, window):
         #Initializes the basic slide. Handled as a GTK text view
+        self.state = State()
         self.window = window
         self.box = Gtk.Grid()
         self.scrolledwindow = Gtk.ScrolledWindow()
@@ -15,6 +19,8 @@ class Slide:
         self.textview = Gtk.TextView()
         self.height = 540
         self.width = 910
+        self.state.height = 540
+        self.state.width = 910
         self.scrolledwindow.set_size_request(self.width, self.height)
         self.textview.set_size_request(self.width, self.height) #16:9 aspect ratio. Can be changed as needed
         self.textbuffer = self.textview.get_buffer()
@@ -23,7 +29,9 @@ class Slide:
 
         #Sets our default text and font
         self.currentfont = "sans"
+        self.state.currentfont = "sans"
         self.currentfontsize = "11"
+        self.state.currentfontsize = "11"
         self.set_font(self.currentfont, self.currentfontsize, False)
         
         #set top and bottom margins. Note: Right/Left aren't compatible with text wrapping
@@ -31,7 +39,9 @@ class Slide:
         self.textview.set_bottom_margin(25)
         #Handle right/left margins as non-editible textboxes
         self.rmsize = 25 #size of the left margin
+        self.state.rmsize = 25
         self.lmsize = 25 #size of the right margin
+        self.state.lmsize = 25
         self.rightmargin = Gtk.TextView()
         self.rightmargin.set_editable(False)
         self.rightmargin.set_size_request(25, self.height)
@@ -45,6 +55,7 @@ class Slide:
 
 
         self.textbuffer.set_text("You can type here. Select and delete this text to remove.")
+        self.state.textbuffer = "You can type here. Select and delete this text to remove."
         #Allows wraparound. Character wraparound was chosen over word wraparound to prevent
         self.textview.set_wrap_mode(Gtk.WrapMode.CHAR)
         #Long words from increasing slide size
@@ -55,6 +66,25 @@ class Slide:
         self.tag_italic = self.textbuffer.create_tag("italic", style=Pango.Style.ITALIC)
         self.tag_underline = self.textbuffer.create_tag("underline", underline=Pango.Underline.SINGLE)
 
+    def get_state(self):
+        return self.state
+
+    def load_from(self, state):
+        self.width = state.width
+        self.height = state.height
+        self.currentfont = state.currentfont
+        self.currentfontsize = state.currentfontsize
+        self.rmsize = state.rmsize
+        self.lmsize = state.lmsize
+        self.state.width = state.width
+        self.state.height = state.height
+        self.state.currentfont = state.currentfont
+        self.state.currentfontsize = state.currentfontsize
+        self.state.rmsize = state.rmsize
+        self.state.lmsize = state.lmsize
+        self.state.textbuffer = state.textbuffer
+        self.textbuffer.set_text(state.textbuffer)
+
     def resize_slide(self, width, height, pangoFont):
         #Resizes the slide and the textbox as a result.
         self.textview.set_size_request(width-(self.lmsize+self.rmsize), height)
@@ -62,19 +92,22 @@ class Slide:
         self.rightmargin.set_size_request(self.rmsize, height)
         #Pango requires a string w/font and size. Example: "Sans 20"
         self.textview.modify_font(Pango.FontDescription(pangoFont)) #add scrollbar as well
-
+        self.state.height = height
+        self.state.width = width
         #Stubbed, needs to find a way to resize images once they are added.
 
     def margin_size(self, margin, marginsize):
         if margin == "left":
             self.leftmargin.set_size_request(marginsize, self.height)
             self.lmsize = marginsize
+            self.state.lmsize = marginsize
         elif margin == "right":
             self.rightmargin.set_size_request(marginsize, self.height)
             self.rmsize == marginsize
+            self.state.rmsize = marginsize
         elif margin == "top":
             self.textview.set_top_margin(marginsize)
-        elif margin == "top":
+        elif margin == "bottom":
             self.textview.set_bottom_margin(marginsize)
 
     def get_slide(self):
@@ -101,7 +134,9 @@ class Slide:
             #print("Warning! This font may be too small to read!")\
         newfont = font + " " + str(size)
         self.currentfont = font
+        self.state.currentfont = font
         self.currentfontsize = size
+        self.state.currentfontsize = size
         self.textview.modify_font(Pango.FontDescription(newfont))
 
     def increment_font(self):
@@ -120,7 +155,9 @@ class Slide:
     def set_dimensions(self, newwidth, newheight):
         #set the width and height of the slide
         self.width = newwidth-(self.lmsize+self.rmsize)
+        self.state.width = newwidth-(self.lmsize+self.rmsize)
         self.height = newheight
+        self.state.height = newwidth-(self.lmsize+self.rmsize)
         self.set_font(self.currentfont, 2, False)
         self.leftmargin.set_size_request(self.lmsize, self.height)
         self.rightmargin.set_size_request(self.rmsize, self.height)
@@ -128,11 +165,13 @@ class Slide:
         self.textview.set_size_request(self.width, self.height)
         
     def insert_image_clicked(self,button):
-        dialog_window = Gtk.MessageDialog(self.window,
-                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                Gtk.MessageType.QUESTION,
-                                Gtk.ButtonsType.OK,
-                                "Choose the width and height of the image.")
+        dialog_window = Gtk.MessageDialog(
+            self.window,
+            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+            Gtk.MessageType.QUESTION,
+            Gtk.ButtonsType.OK,
+            "Choose the width and height of the image."
+        )
         dialog_box = dialog_window.get_content_area()
         spin_button_w = Gtk.SpinButton()
         adjustment = Gtk.Adjustment(1, 1, 100, 1, 10, 1)
@@ -162,7 +201,8 @@ class Slide:
         dialog.set_filter(filefilter)
 
         if dialog.run() == 1:
-            pic = GdkPixbuf.Pixbuf.new_from_file_at_scale(dialog.get_filename(), tempwidth, tempheight, True)
+            fname = dialog.get_filename()
+            pic = GdkPixbuf.Pixbuf.new_from_file_at_scale(fname, tempwidth, tempheight, True)
             self.insert_image(pic)
 
         dialog.destroy()
@@ -262,6 +302,16 @@ class SlideDeck:
         self.buttons.append(firstbutton)
         self.win = win
 
+    def get_state(self):
+        state = []
+        for s in self.deck:
+            state.append(s.get_state())
+        return state
+
+    def load_from(self, state):
+        for i, s in enumerate(self.deck):
+            self.deck[i].load_from(state[i])
+
     def get_current_slide(self):
         #Returns the current slide
         return self.currentslide
@@ -336,7 +386,4 @@ def slideTest():
     
     Gtk.main()
     
-
-
-
 # slideTest()

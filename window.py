@@ -8,6 +8,8 @@ from gi.repository import Gdk
 
 import slide
 
+import pickle
+
 class Window(Gtk.Window):
     def __init__(self):
         '''
@@ -614,6 +616,18 @@ class Window(Gtk.Window):
         # insert picture
         elif ctrl and key == "p":
             self.image_clicked(self.button_insertpic)
+        elif ctrl and key == "s":
+            state = self.slide_deck.get_state()
+            p = pickle.dumps(state)
+            with open("untitled.slyd", 'w') as f:
+                f.write(p)
+            print(p)
+        elif ctrl and key == "a":
+            with open("untitled.slyd") as f:
+                p = f.read()
+            self.slide_deck.load_from(p)
+
+
 
 
 
@@ -689,8 +703,5 @@ class Window(Gtk.Window):
     #------------------------------------#
     def decrease_font(self, button):
         self.current_slide.decrement_font()
-
-window = Window()
-window.main()
 
 
