@@ -15,8 +15,4 @@ Once these things are properly installed and paths are set. Navigate in your ter
 For more information about how to use Slydes, read "help.html", a file included in this repository. Alternatively, you can click the question mark button in Slydes to the far right of the window.
 
 The following people have contributed to this project:
-Jordan Deagan
-Isaac Denner
-Amilia MacIntyre
-Haylee Millar
-Erik Riddle
+Jordan Deagan, Isaac Denner, Amilia MacIntyre, Haylee Millar, Erik Riddle
