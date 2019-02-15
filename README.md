@@ -12,6 +12,8 @@ Prior to running windows.py, you will need to install Python 3.x and Python GTK+
 
 Once these things are properly installed and paths are set. Navigate in your terminal to the directory this project exists. Depending on what your path is set for Python 3.x, type either "python3 window.py" or "python window.py". Slydes will then launch.
 
+Alternatively, run the install.command by double clicking on it and it will run.
+
 For more information about how to use Slydes, read "help.html", a file included in this repository. Alternatively, you can click the question mark button in Slydes to the far right of the window.
 
 The following people have contributed to this project:
