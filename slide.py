@@ -309,6 +309,7 @@ class SlideDeck:
         return state
 
     def load_from(self, state):
+        print(type(state))
         for i, s in enumerate(self.deck):
             self.deck[i].load_from(state[i])
 
